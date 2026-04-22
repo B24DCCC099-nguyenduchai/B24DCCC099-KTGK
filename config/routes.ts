@@ -38,18 +38,23 @@
 	},
 
 	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'DanhMuc',
+		path: '/danh-muc',
+		icon: 'copy',
+		routes: [
+			{
+				name: 'PhongHoc',
+				path: 'phong-hoc',
+				component: './DanhMuc/PhongHoc',
+			},
+		// 		{
+		// 			name: 'ChucVu',
+		// 			path: 'chuc-vu',
+		// 			component: './DanhMuc/ChucVu',
+		// 		},
+		],
+	},
 
 	{
 		path: '/notification',
