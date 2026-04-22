@@ -1,5 +1,3 @@
-// base-web-umi/src/components/DanhMuc/PhongHocForm.tsx
-
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Select, InputNumber, message } from 'antd';
 import { PhongHoc, LoaiPhong, danhSachNguoiPhuTrach } from '@/models/danhmuc/phongHoc';
@@ -11,7 +9,12 @@ interface PhongHocFormProps {
   initialValues?: PhongHoc;
 }
 
-const PhongHocForm: React.FC<PhongHocFormProps> = ({ visible, onCancel, onOk, initialValues }) => {
+const PhongHocForm: React.FC<PhongHocFormProps> = ({
+  visible,
+  onCancel,
+  onOk,
+  initialValues,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -27,7 +30,7 @@ const PhongHocForm: React.FC<PhongHocFormProps> = ({ visible, onCancel, onOk, in
     try {
       const values = await form.validateFields();
       onOk(values);
-    } catch (error) {
+    } catch {
       message.error('Vui lòng kiểm tra lại thông tin!');
     }
   };
@@ -38,8 +41,11 @@ const PhongHocForm: React.FC<PhongHocFormProps> = ({ visible, onCancel, onOk, in
       visible={visible}
       onCancel={onCancel}
       onOk={handleOk}
+      destroyOnClose
     >
       <Form form={form} layout="vertical">
+
+        {/* ===== MÃ PHÒNG ===== */}
         <Form.Item
           name="maPhong"
           label="Mã phòng"
@@ -48,8 +54,13 @@ const PhongHocForm: React.FC<PhongHocFormProps> = ({ visible, onCancel, onOk, in
             { max: 10, message: 'Mã phòng tối đa 10 ký tự!' },
           ]}
         >
-          <Input />
+          <Input
+            maxLength={10}         
+            showCount              
+          />
         </Form.Item>
+
+        {/* ===== TÊN PHÒNG ===== */}
         <Form.Item
           name="tenPhong"
           label="Tên phòng"
@@ -58,42 +69,70 @@ const PhongHocForm: React.FC<PhongHocFormProps> = ({ visible, onCancel, onOk, in
             { max: 50, message: 'Tên phòng tối đa 50 ký tự!' },
           ]}
         >
-          <Input />
+          <Input
+            maxLength={50}         
+            showCount
+          />
         </Form.Item>
+
+        {/* ===== NGƯỜI PHỤ TRÁCH ===== */}
         <Form.Item
           name="nguoiPhuTrach"
           label="Người phụ trách"
-          rules={[{ required: true, message: 'Vui lòng chọn người phụ trách!' }]}
+          rules={[{ required: true, message: 'Vui lòng chọn!' }]}
         >
-          <Select>
-            {danhSachNguoiPhuTrach.map(name => (
+          <Select placeholder="Chọn người phụ trách">
+            {danhSachNguoiPhuTrach.map((name) => (
               <Select.Option key={name} value={name}>
                 {name}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
+
+        {/* ===== SỐ CHỖ NGỒI ===== */}
         <Form.Item
           name="soChoNgoi"
           label="Số chỗ ngồi"
           rules={[
-            { required: true, message: 'Vui lòng nhập số chỗ ngồi!' },
-            { type: 'number', min: 10, max: 200, message: 'Số chỗ ngồi từ 10 đến 200!' },
+
+            {
+              validator: (_, value) => {
+                if (value === undefined || value === null) {
+                  return Promise.reject('Vui lòng nhập số chỗ!');
+                }
+                if (value < 10 || value > 200) {
+                  return Promise.reject('Số chỗ ngồi phải từ 10 đến 200!');
+                }
+                return Promise.resolve();
+              },
+            },
           ]}
         >
-          <InputNumber min={10} max={200} />
+          <InputNumber
+            style={{ width: '100%' }} 
+          />
         </Form.Item>
+
+        {/* ===== LOẠI PHÒNG ===== */}
         <Form.Item
           name="loaiPhong"
           label="Loại phòng"
           rules={[{ required: true, message: 'Vui lòng chọn loại phòng!' }]}
         >
-          <Select>
-            <Select.Option value={LoaiPhong.LyThuyet}>{LoaiPhong.LyThuyet}</Select.Option>
-            <Select.Option value={LoaiPhong.ThucHanh}>{LoaiPhong.ThucHanh}</Select.Option>
-            <Select.Option value={LoaiPhong.HoiTruong}>{LoaiPhong.HoiTruong}</Select.Option>
+          <Select placeholder="Chọn loại phòng">
+            <Select.Option value={LoaiPhong.LyThuyet}>
+              {LoaiPhong.LyThuyet}
+            </Select.Option>
+            <Select.Option value={LoaiPhong.ThucHanh}>
+              {LoaiPhong.ThucHanh}
+            </Select.Option>
+            <Select.Option value={LoaiPhong.HoiTruong}>
+              {LoaiPhong.HoiTruong}
+            </Select.Option>
           </Select>
         </Form.Item>
+
       </Form>
     </Modal>
   );
